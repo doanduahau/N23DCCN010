@@ -1,0 +1,16 @@
+{
+  "name": "nhom5-express-server",
+  "version": "1.0.0",
+  "description": "Buổi 06 - Bài tập thực hành: Express server + Form đăng ký người dùng",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}

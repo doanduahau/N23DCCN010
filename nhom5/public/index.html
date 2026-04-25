@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nhóm 5 — Bài tập thực hành Express</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f6f8fa;
+      --surface: #ffffff;
+      --surface2: #f0f2f5;
+      --border: #d0d7de;
+      --accent: #1a7f37;
+      --accent-h: #2da44e;
+      --blue: #0969da;
+      --blue-h: #0060c0;
+      --text: #1f2328;
+      --muted: #656d76;
+      --error: #d1242f;
+      --success: #1a7f37;
+      --warn: #9a6700;
+      --radius: 10px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    /* ── HEADER ── */
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    header .badge {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    header h1 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, #0969da 0%, #1a7f37 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.4rem;
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* ── GRID ── */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      max-width: 860px;
+      margin: 0 auto 2rem;
+    }
+
+    @media (max-width: 640px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.6rem;
+      transition: border-color .2s;
+    }
+
+    .card:hover {
+      border-color: #0969da66;
+      box-shadow: 0 2px 12px rgba(9,105,218,0.08);
+    }
+
+    .card-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .card-route {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #0969da;
+      margin-bottom: 1.2rem;
+    }
+
+    .card-route.post {
+      color: #3fb950;
+    }
+
+    /* ── FORM ── */
+    label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+      margin-top: 0.8rem;
+    }
+
+    label:first-of-type {
+      margin-top: 0;
+    }
+
+    input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.6rem 0.9rem;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    input::placeholder {
+      color: #adb5bd;
+    }
+
+    input:focus {
+      border-color: #0969da;
+      box-shadow: 0 0 0 3px #0969da22;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 1.1rem;
+      padding: 0.7rem;
+      border: none;
+      border-radius: 6px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+    }
+
+    button:active {
+      transform: scale(.98);
+    }
+
+    .btn-get {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .btn-get:hover {
+      background: var(--blue-h);
+    }
+
+    .btn-post {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-post:hover {
+      background: var(--accent-h);
+    }
+
+    /* ── RESULT BOX ── */
+    .result {
+      margin-top: 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      min-height: 60px;
+      color: var(--muted);
+      white-space: pre-wrap;
+      word-break: break-all;
+      line-height: 1.6;
+      transition: border-color .3s;
+    }
+
+    .result.ok {
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .result.err {
+      border-color: var(--error);
+      color: var(--error);
+    }
+
+    /* ── CONSOLE LOG ── */
+    .console-wrap {
+      max-width: 860px;
+      margin: 0 auto 2rem;
+    }
+
+    .console-header {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .console-header::before {
+      content: '●';
+      color: var(--accent);
+      font-size: 0.8rem;
+      animation: blink 1.4s infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .2
+      }
+    }
+
+    #consoleLog {
+      background: #1b1f24;
+      border: 1px solid #30363d;
+      border-radius: var(--radius);
+      padding: 1rem 1.2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: #3fb950;
+      min-height: 70px;
+      max-height: 180px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      line-height: 1.7;
+    }
+
+    #consoleLog .log-entry {
+      display: block;
+    }
+
+    #consoleLog .log-muted {
+      color: #8b949e;
+    }
+
+    /* ── NOTE ── */
+    .note {
+      max-width: 860px;
+      margin: 0 auto;
+      background: #fff8c5;
+      border: 1px solid #e3b34188;
+      border-radius: var(--radius);
+      padding: 0.85rem 1.2rem;
+      font-size: 0.82rem;
+      color: var(--warn);
+    }
+
+    .note strong {
+      font-weight: 700;
+    }
+
+    /* ── LOADING SPINNER ── */
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid #ffffff44;
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="badge">Buổi 06</div>
+    <h1>Node.js + Express Server</h1>
+    <p>Middleware · Routing · HTML · Fetch API</p>
+  </header>
+
+  <!-- ── FORMS ── -->
+  <div class="grid">
+
+    <!-- FORM 1: GET /api/info -->
+    <div class="card">
+      <div class="card-title">Form 1 — GET</div>
+      <div class="card-route">/api/info</div>
+
+      <label for="get-name">Tên</label>
+      <input id="get-name" type="text" placeholder="Nhập tên của bạn..." />
+
+      <label for="get-age">Tuổi</label>
+      <input id="get-age" type="number" placeholder="Nhập tuổi (≥ 18)..." min="1" />
+
+      <button class="btn-get" id="btn-get" onclick="sendGet()">Gửi GET /api/info</button>
+
+      <div class="result log-muted" id="result-get">Kết quả hiện ở đây...</div>
+    </div>
+
+    <!-- FORM 2: POST /api/register -->
+    <div class="card">
+      <div class="card-title">Form 2 — POST</div>
+      <div class="card-route post">/api/register</div>
+
+      <label for="post-name">Tên</label>
+      <input id="post-name" type="text" placeholder="Nhập tên..." />
+
+      <label for="post-age">Tuổi</label>
+      <input id="post-age" type="number" placeholder="Nhập tuổi..." min="1" />
+
+      <label for="post-email">Email</label>
+      <input id="post-email" type="email" placeholder="Nhập email..." />
+
+      <button class="btn-post" id="btn-post" onclick="sendPost()">Gửi POST /api/register</button>
+
+      <div class="result log-muted" id="result-post">Kết quả hiện ở đây...</div>
+    </div>
+
+  </div>
+
+  <!-- ── CONSOLE LOG ── -->
+  <div class="console-wrap">
+    <div class="console-header">Console Log — Middleware logger (client-side)</div>
+    <div id="consoleLog"><span class="log-muted">// Log sẽ hiện ở đây khi bạn gửi request...</span></div>
+  </div>
+
+  <!-- ── NOTE ── -->
+  <div class="note">
+    <strong>⚠ Lưu ý:</strong> Frontend này kết nối đến Express server đang chạy tại
+    <code>http://localhost:3000</code>. Hãy chạy <code>node index.js</code> trước khi thử.
+  </div>
+
+  <script>
+    // ─── HELPERS ─────────────────────────────────────────────────────────────
+
+    function log(msg, type = 'normal') {
+      const el = document.getElementById('consoleLog');
+      const now = new Date().toLocaleTimeString('vi-VN');
+      const span = document.createElement('span');
+      span.className = 'log-entry';
+      if (type === 'muted') span.className += ' log-muted';
+      span.textContent = `[${now}] ${msg}`;
+      if (el.querySelector('.log-muted')?.textContent.startsWith('//')) {
+        el.innerHTML = '';
+      }
+      el.appendChild(span);
+      el.scrollTop = el.scrollHeight;
+    }
+
+    function setResult(id, text, status) {
+      const el = document.getElementById(id);
+      el.className = 'result ' + (status === 'ok' ? 'ok' : status === 'err' ? 'err' : 'log-muted');
+      el.textContent = text;
+    }
+
+    function setLoading(btnId, loading) {
+      const btn = document.getElementById(btnId);
+      if (loading) {
+        btn.dataset.orig = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span>Đang gửi...';
+        btn.disabled = true;
+      } else {
+        btn.innerHTML = btn.dataset.orig;
+        btn.disabled = false;
+      }
+    }
+
+    // ─── FORM 1: GET /api/info ────────────────────────────────────────────────
+
+    async function sendGet() {
+      // event.preventDefault() — không reload trang khi submit
+      const name = document.getElementById('get-name').value.trim();
+      const age = document.getElementById('get-age').value.trim();
+
+      const params = new URLSearchParams();
+      if (name) params.append('name', name);
+      if (age) params.append('age', age);
+
+      const url = `/api/info?${params.toString()}`;
+      log(`GET ${url}`);
+      setLoading('btn-get', true);
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (res.ok) {
+          setResult('result-get', JSON.stringify(data, null, 2), 'ok');
+          log(`→ 200 OK: ${data.message}`);
+        } else {
+          setResult('result-get', `❌ ${data.error}`, 'err');
+          log(`→ ${res.status} Error: ${data.error}`, 'muted');
+        }
+      } catch (err) {
+        setResult('result-get', `⚠ Không thể kết nối server: ${err.message}`, 'err');
+        log(`→ Lỗi kết nối: ${err.message}`, 'muted');
+      } finally {
+        setLoading('btn-get', false);
+      }
+    }
+
+    // ─── FORM 2: POST /api/register ───────────────────────────────────────────
+
+    async function sendPost() {
+      const name = document.getElementById('post-name').value.trim();
+      const age = document.getElementById('post-age').value.trim();
+      const email = document.getElementById('post-email').value.trim();
+
+      log(`POST /api/register  body: { name: "${name}", age: "${age}", email: "${email}" }`);
+      setLoading('btn-post', true);
+
+      try {
+        const res = await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, age, email }),
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          setResult('result-post', JSON.stringify(data, null, 2), 'ok');
+          log(`→ 201 Created: ID #${data.user.id} — ${data.message}`);
+        } else {
+          setResult('result-post', `❌ ${data.error}`, 'err');
+          log(`→ ${res.status} Error: ${data.error}`, 'muted');
+        }
+      } catch (err) {
+        setResult('result-post', `⚠ Không thể kết nối server: ${err.message}`, 'err');
+        log(`→ Lỗi kết nối: ${err.message}`, 'muted');
+      } finally {
+        setLoading('btn-post', false);
+      }
+    }
+
+    // ─── ENTER KEY support ────────────────────────────────────────────────────
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const focused = document.activeElement;
+        if (['get-name', 'get-age'].includes(focused.id)) sendGet();
+        if (['post-name', 'post-age', 'post-email'].includes(focused.id)) sendPost();
+      }
+    });
+  </script>
+
+</body>
+
+</html>

@@ -4,16 +4,6 @@ API quản lý sinh viên xây dựng bằng **Node.js + Express + MongoDB (Mong
 
 ---
 
-## 👥 Thành viên nhóm
-
-| STT | Họ và tên | MSSV |
-|-----|-----------|------|
-| 1   |           |      |
-| 2   |           |      |
-| 3   |           |      |
-
----
-
 ## 🏗️ Kiến trúc project
 
 ```
